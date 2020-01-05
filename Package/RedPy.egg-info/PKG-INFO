@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: RedPy
+Version: 0.0.3
+Summary: A Python package to download images from Reddit
+Home-page: https://github.com/prashantsengar/RedPy
+Author: Prashant Sengar
+Author-email: prashantsengar5@gmail.com
+License: UNKNOWN
+Description: # RedPy
+        
+        
+        A Python wrapper to download images from Reddit
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
