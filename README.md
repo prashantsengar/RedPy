@@ -16,7 +16,7 @@ A Python wrapper to download images from Reddit
 
 In a Python shell
 
-```
+```python3
 >>> from redpy import RedPy
 # create an instance
 # Creatinga an instance requires you to enter a user-agent. From the PRAW documentation
