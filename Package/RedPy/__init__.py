@@ -1,2 +1,2 @@
 name = "RedPy"
-from RedPy.redpy import Redpy
+from .redpy import Redpy

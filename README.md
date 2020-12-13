@@ -17,11 +17,11 @@ A Python wrapper to download images from Reddit
 In a Python shell
 
 ```python3
->>> from redpy import RedPy
+>>> from RedPy import Redpy
 # create an instance
 # Creatinga an instance requires you to enter a user-agent. From the PRAW documentation
 "A user agent is a unique identifier that helps Reddit determine the source of network requests. To use Reddit’s API, you need a unique and descriptive user agent. The recommended format is <platform>:<app ID>:<version string> (by u/<Reddit username>). For example, android:com.example.myredditapp:v1.2.3 (by u/kemitche). Read more about user agents at Reddit’s API wiki page."
->>> red = RedPy('web:redpy:v2.1 (by u/myusername)')
+>>> red = Redpy('web:redpy:v2.1 (by u/myusername)')
 
 # Downloading requires a subreddit, and some other optional-arguments. 
 # subreddit: the text after r/. For example, for r/pics, subreddit=pics
