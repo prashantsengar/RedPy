@@ -1,8 +1,9 @@
 import requests as _requests
 import os as _os
 from fake_useragent import UserAgent
-fav = 'Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)'
-ua = UserAgent(fallback=fav)
+ua = UserAgent(
+    fallback=("Mozilla/5.0 (compatible; MSIE 10.0; Macintosh;"
+              " Intel Mac OS X 10_7_3; Trident/6.0"))
 
 
 class Redpy:
@@ -21,7 +22,11 @@ class Redpy:
         subreddit.strip('/')
         if sort_option is None:
             sort_option = ''
+        json_data = self._generateJSON(subreddit, sort_option)
 
+        self._DownloadFiles(json_data, number)
+
+    def _generateJSON(self, subreddit, sort_option):
         self.url = 'https://www.reddit.com/r/' + \
             subreddit + '/' + sort_option + '.json'
         print(self.url)
@@ -31,13 +36,11 @@ class Redpy:
 #        session.headers.update({'user-agent': 'lmao rofl@matapita.com'})
 
         res = _requests.get(self.url, headers={'user-agent': self.user})
-
         if res.status_code != 200:
             print("Could not download")
             print(res.status_code)
             return
-
-        self._DownloadFiles(res.json(), number)
+        return res.json()
 
     def _DownloadFiles(self, jsonfile, number_of_files):
         image_links = self._getImages(jsonfile, number_of_files)
