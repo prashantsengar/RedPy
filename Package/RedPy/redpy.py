@@ -9,6 +9,7 @@ class Redpy:
         """Enter a user agent"""
         # print("hello")
         self.user = user
+        self.json_data = None
 
     def download(self, subreddit, number=5, sort_option=None,
                  num_of_images=0, num_of_videos=0):
@@ -25,6 +26,10 @@ class Redpy:
         if ((not num_of_images) and (not num_of_videos)):
             num_of_images = random.randint(0, number)
             num_of_videos = number - num_of_images
+
+        subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
+
+        self.json_data = self._generateJSON(subreddit, sort_option)
         self.download_images(subreddit, num_of_images, sort_option)
         self.download_videos(subreddit, num_of_videos, sort_option)
 
@@ -36,9 +41,10 @@ class Redpy:
         """
         subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
 
-        json_data = self._generateJSON(subreddit, sort_option)
+        if not self.json_data:
+            self.json_data = self._generateJSON(subreddit, sort_option)
 
-        self._DownloadFiles(self._getImages(json_data, number))
+        self._DownloadFiles(self._getImages(self.json_data, number))
 
     def _DownloadFiles(self, image_links):
 
@@ -80,9 +86,10 @@ class Redpy:
         """
         subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
 
-        json_data = self._generateJSON(subreddit, sort_option)
+        if not self.json_data:
+            self.json_data = self._generateJSON(subreddit, sort_option)
 
-        self._DownloadVideoFiles(self._getVideos(json_data, number))
+        self._DownloadVideoFiles(self._getVideos(self.json_data, number))
 
     def _DownloadVideoFiles(self, video_links):
 
@@ -130,8 +137,8 @@ class Redpy:
         res = _requests.get(self.url, headers={'user-agent': self.user})
         if res.status_code != 200:
             print("Could not download")
-            print(res.status_code)
-            return
+            print("Change the User-Agent header")
+            raise Exception(f"Error Status Code: {res.status_code}")
         return res.json()
 
     @staticmethod
