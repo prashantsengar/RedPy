@@ -4,15 +4,15 @@ import random
 
 
 class Redpy:
-
     def __init__(self, user_agent):
         """Enter a user agent"""
         # print("hello")
         self.user = user_agent
         self.json_data = None
 
-    def download(self, subreddit, number=5, sort_option=None,
-                 num_of_images=0, num_of_videos=0):
+    def download(
+        self, subreddit, number=5, sort_option=None, num_of_images=0, num_of_videos=0
+    ):
         """
         Download images and videos from given subreddit
         - subreddit: name of subreddit from where to download
@@ -24,12 +24,12 @@ class Redpy:
         numbers are used
         """
         if sort_option is None:
-            sort_option = ''
-        if ((not num_of_images) and (not num_of_videos)):
+            sort_option = ""
+        if (not num_of_images) and (not num_of_videos):
             num_of_images = random.randint(0, number)
             num_of_videos = number - num_of_images
 
-        subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
+        subreddit = subreddit.split("/")[-1] if "/" in subreddit else subreddit
 
         self.json_data = self._generateJSON(subreddit, sort_option)
         self.download_images(subreddit, num_of_images, sort_option)
@@ -37,13 +37,13 @@ class Redpy:
 
     def download_images(self, subreddit, number=5, sort_option=None):
         """Downloads images from subreddit.
-            subreddit="Name of subreddit"
-            number=Number of images to be downloaded
-            sort_option=new/hot/top
+        subreddit="Name of subreddit"
+        number=Number of images to be downloaded
+        sort_option=new/hot/top
         """
         if sort_option is None:
-            sort_option = ''
-        subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
+            sort_option = ""
+        subreddit = subreddit.split("/")[-1] if "/" in subreddit else subreddit
 
         if self.json_data is None:
             self.json_data = self._generateJSON(subreddit, sort_option)
@@ -58,11 +58,12 @@ class Redpy:
 
         index = 0  # used to name the files
         for image_link in image_links:
-            image_link = image_link.replace('amp;', '')
+            image_link = image_link.replace("amp;", "")
             f = _requests.get(image_link)
             if f.status_code == 200:
-                with open(_os.path.join(_os.getcwd(), "red_media",
-                        f"{index}.jpg"), 'wb') as media_file:
+                with open(
+                    _os.path.join(_os.getcwd(), "red_media", f"{index}.jpg"), "wb"
+                ) as media_file:
                     for chunk in f.iter_content(100000):
                         media_file.write(chunk)
                 print("Downloaded")
@@ -74,21 +75,24 @@ class Redpy:
         images = []  # contains links of images
         for index in range(number_of_files):
             try:
-                images.append(jsonfile['data']['children'][index]['data']
-                              ['preview']['images'][0]['source']['url'])
+                images.append(
+                    jsonfile["data"]["children"][index]["data"]["preview"]["images"][0][
+                        "source"
+                    ]["url"]
+                )
             except Exception as e:
                 print("Exception: ", e)
         return images
 
     def download_videos(self, subreddit, number=5, sort_option=None):
         if sort_option is None:
-            sort_option = ''
+            sort_option = ""
         """Downloads Videos from subreddit.
             subreddit="Name of subreddit"
             number=Number of videos to be downloaded
             sort_option=new/hot/top
         """
-        subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
+        subreddit = subreddit.split("/")[-1] if "/" in subreddit else subreddit
 
         if self.json_data is None:
             self.json_data = self._generateJSON(subreddit, sort_option)
@@ -103,12 +107,11 @@ class Redpy:
 
         index = 0  # used to name the files
         for video_link in video_links:
-            video_link = video_link.replace('amp;', '')
+            video_link = video_link.replace("amp;", "")
             f = _requests.get(video_link)
 
             if f.status_code == 200:
-                with open(f'{_os.getcwd()}/red_media/{index}.mp4'
-                          , 'wb') as media_file:
+                with open(f"{_os.getcwd()}/red_media/{index}.mp4", "wb") as media_file:
                     for chunk in f.iter_content(100000):
                         media_file.write(chunk)
                 print("Downloaded")
@@ -120,23 +123,24 @@ class Redpy:
 
         for i in range(number_of_files):
             try:
-                videos.append(jsonfile['data']['children'][i]
-                              ['data']['preview']
-                              ['reddit_video_preview']['fallback_url'])
+                videos.append(
+                    jsonfile["data"]["children"][i]["data"]["preview"][
+                        "reddit_video_preview"
+                    ]["fallback_url"]
+                )
             except Exception as e:
                 print("Exception: ", e)
         return videos
 
     def _generateJSON(self, subreddit, sort_option):
-        self.url = 'https://www.reddit.com/r/' + \
-            subreddit + '/' + sort_option + '.json'
+        self.url = "https://www.reddit.com/r/" + subreddit + "/" + sort_option + ".json"
         print(self.url)
 
-#        session = _requests.Session()
-#        session.headers.update({'User-Agent': self.user})
-#        session.headers.update({'user-agent': 'lmao rofl@matapita.com'})
+        #        session = _requests.Session()
+        #        session.headers.update({'User-Agent': self.user})
+        #        session.headers.update({'user-agent': 'lmao rofl@matapita.com'})
 
-        res = _requests.get(self.url, headers={'user-agent': self.user})
+        res = _requests.get(self.url, headers={"user-agent": self.user})
         if res.status_code != 200:
             print("Could not download")
             print("Change the User-Agent header")
@@ -146,7 +150,7 @@ class Redpy:
     @staticmethod
     def createFolder():
         try:
-            red_media = _os.path.join(_os.getcwd(), 'red_media')
+            red_media = _os.path.join(_os.getcwd(), "red_media")
             if not _os.path.exists(red_media):
                 _os.mkdir(red_media)
                 return True
