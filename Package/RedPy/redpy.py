@@ -5,10 +5,10 @@ import random
 
 class Redpy:
 
-    def __init__(self, user):
+    def __init__(self, user_agent):
         """Enter a user agent"""
         # print("hello")
-        self.user = user
+        self.user = user_agent
         self.json_data = None
 
     def download(self, subreddit, number=5, sort_option=None,
@@ -23,6 +23,8 @@ class Redpy:
         if num_of_images and num_of_videos are not given, then random
         numbers are used
         """
+        if sort_option is None:
+            sort_option = ''
         if ((not num_of_images) and (not num_of_videos)):
             num_of_images = random.randint(0, number)
             num_of_videos = number - num_of_images
@@ -33,15 +35,17 @@ class Redpy:
         self.download_images(subreddit, num_of_images, sort_option)
         self.download_videos(subreddit, num_of_videos, sort_option)
 
-    def download_images(self, subreddit, number=5, sort_option=''):
+    def download_images(self, subreddit, number=5, sort_option=None):
         """Downloads images from subreddit.
             subreddit="Name of subreddit"
             number=Number of images to be downloaded
             sort_option=new/hot/top
         """
+        if sort_option is None:
+            sort_option = ''
         subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
 
-        if not self.json_data:
+        if self.json_data is None:
             self.json_data = self._generateJSON(subreddit, sort_option)
 
         self._DownloadFiles(self._getImages(self.json_data, number))
@@ -57,12 +61,10 @@ class Redpy:
             image_link = image_link.replace('amp;', '')
             f = _requests.get(image_link)
             if f.status_code == 200:
-                media_file = open(_os.path.join(
-                    _os.getcwd(), "red_media", f"{index}.jpg"), 'wb')
-
-                for chunk in f.iter_content(100000):
-                    media_file.write(chunk)
-                media_file.close()
+                with open(_os.path.join(_os.getcwd(), "red_media",
+                        f"{index}.jpg"), 'wb') as media_file:
+                    for chunk in f.iter_content(100000):
+                        media_file.write(chunk)
                 print("Downloaded")
                 index += 1
         print("Download complete")
@@ -78,7 +80,9 @@ class Redpy:
                 print("Exception: ", e)
         return images
 
-    def download_videos(self, subreddit, number=5, sort_option=''):
+    def download_videos(self, subreddit, number=5, sort_option=None):
+        if sort_option is None:
+            sort_option = ''
         """Downloads Videos from subreddit.
             subreddit="Name of subreddit"
             number=Number of videos to be downloaded
@@ -86,7 +90,7 @@ class Redpy:
         """
         subreddit = subreddit.split('/')[-1] if "/" in subreddit else subreddit
 
-        if not self.json_data:
+        if self.json_data is None:
             self.json_data = self._generateJSON(subreddit, sort_option)
 
         self._DownloadVideoFiles(self._getVideos(self.json_data, number))
@@ -103,12 +107,10 @@ class Redpy:
             f = _requests.get(video_link)
 
             if f.status_code == 200:
-                media_file = open(
-                    f'{_os.getcwd()}/red_media/{index}.mp4', 'wb')
-
-                for chunk in f.iter_content(100000):
-                    media_file.write(chunk)
-                media_file.close()
+                with open(f'{_os.getcwd()}/red_media/{index}.mp4'
+                          , 'wb') as media_file:
+                    for chunk in f.iter_content(100000):
+                        media_file.write(chunk)
                 print("Downloaded")
                 index += 1
         print("Download complete")
