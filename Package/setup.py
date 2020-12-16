@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="RedPy",
-    version="0.0.3",
+    version="0.0.4",
     author="Prashant Sengar",
     author_email="prashantsengar5@gmail.com",
     description="A Python package to download images from Reddit",
@@ -18,4 +18,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    install_requires=['requests'],
 )
